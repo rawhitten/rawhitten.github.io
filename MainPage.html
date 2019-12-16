@@ -15,7 +15,7 @@ POINT CLOUD CLASSIFICATION CORRECTION
 
 <li><a href="http://127.0.0.1:8887/potree/VTdronetest.html"> VTDrone Test in Potree</a>
 
-<div style="background-color: #000000">
+<div style="background-color: #23426">
 		<script src="lib/threejs/three.min.js"></script>
 		<script src="lib/threejs/OrbitControls.js"></script>
 		<script src="build/potree.min.js"></script>
@@ -51,7 +51,7 @@ POINT CLOUD CLASSIFICATION CORRECTION
 					antialias: true,
 					preserveDrawingBuffer: false,
 					powerPreference: "high-performance"
-					//renderer.vr.enabled = true;
+					renderer.vr.enabled = true;
 				});
 
 				renderer.vr.enabled = true;
@@ -105,7 +105,7 @@ POINT CLOUD CLASSIFICATION CORRECTION
 				loadPointCloud("data/mypotree/cloud.js", new THREE.Vector3(-11, -4, -1));
 				//loadPointCloud("data/mypotree", new THREE.Vector3(-11, -4, -1));
 				
-				loadPointCloud("http://www.nearearthimaginglab.org/potree/tree/cloud.js", new THREE.Vector3(-11, -4, 0.0));
+				//loadPointCloud("http://www.nearearthimaginglab.org/potree/tree/cloud.js", new THREE.Vector3(-11, -4, 0.0));
 
 				// "http://5.9.65.151/mschuetz/potree/resources/pointclouds/faro/skatepark/cloud.js"
 				// "http://5.9.65.151/mschuetz/potree/resources/pointclouds/weiss/subseamanifold2/cloud.js"
@@ -145,6 +145,7 @@ POINT CLOUD CLASSIFICATION CORRECTION
 
 					controls.update();
 					renderer.render(scene, camera);
+					renderer.setVREnabled(true);
 
 					requestAnimationFrame(loop);
 				};
