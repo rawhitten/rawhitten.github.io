@@ -52,7 +52,7 @@ POINT CLOUD CLASSIFICATION CORRECTION
 					//renderer.vr.enabled = true;
 				});
 
-				// renderer.vr.enabled = true;
+				renderer.vr.enabled = true;
 				// document.body.appendChild( VRButton.createButton( renderer) );
 
 				var geometry = new THREE.BoxBufferGeometry(25, 1, 25);
@@ -144,7 +144,7 @@ POINT CLOUD CLASSIFICATION CORRECTION
 					controls.update();
 					renderer.render(scene, camera);
 					// renderer.vr.enabled = true;
-					// document.body.appendChild( VRButton.createButton( renderer) );
+					// document.body.appendChild( VRButton.createButton( renderer ) );
 
 					requestAnimationFrame(loop);
 				};
@@ -161,8 +161,8 @@ POINT CLOUD CLASSIFICATION CORRECTION
 				}
 				document.body.onresize();
 				
-				Potree.viewer.setVREnabled(true);
-				renderer.vr.enabled = true;
+				//Potree.viewer.setVREnabled(true);
+				//renderer.vr.enabled = true;
 				document.body.appendChild( VRButton.createButton( renderer ) );
 			};
 		</script>
