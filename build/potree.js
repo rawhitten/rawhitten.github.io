@@ -21,6 +21,7 @@
 	{
 		constructor()
 		{
+			// the least recently used item
 			this.first = null;
 			// the most recently used item
 			this.last = null;
