@@ -24,7 +24,7 @@ POINT CLOUD CLASSIFICATION CORRECTION
 		<script type="module">
 
 			//need to link to correct library paths
-			//import { VRButton } from 'lib/threejs/VRButton.js';
+			import { VRButton } from 'lib/threejs/VRButton.js';
 
 			document.body.onload = function()
 			{
@@ -54,8 +54,8 @@ POINT CLOUD CLASSIFICATION CORRECTION
 					//renderer.vr.enabled = true;
 				});
 
-				// renderer.vr.enabled = true;
-				// document.body.appendChild( VRButton.createButton( renderer) );
+				renderer.vr.enabled = true;
+				document.body.appendChild( VRButton.createButton( renderer) );
 
 				var geometry = new THREE.BoxBufferGeometry(25, 1, 25);
 				var material = new THREE.MeshBasicMaterial({color: 0x44AA44});
