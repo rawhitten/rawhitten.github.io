@@ -143,8 +143,8 @@ POINT CLOUD CLASSIFICATION CORRECTION
 
 					controls.update();
 					renderer.render(scene, camera);
-					renderer.vr.enabled = true;
-					document.body.appendChild( VRButton.createButton( renderer) );
+					// renderer.vr.enabled = true;
+					// document.body.appendChild( VRButton.createButton( renderer) );
 
 					requestAnimationFrame(loop);
 				};
@@ -161,7 +161,7 @@ POINT CLOUD CLASSIFICATION CORRECTION
 				}
 				document.body.onresize();
 				
-				//Potree.viewer.setVREnabled(true);
+				Potree.viewer.setVREnabled(true);
 			};
 		</script>
 	</div>
