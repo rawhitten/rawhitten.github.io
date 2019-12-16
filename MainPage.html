@@ -1,5 +1,44 @@
 <!DOCTYPE html>
 <html>
+<head>
+			<style type="text/css">
+			body,
+			html {
+				background-color: #000000;
+				margin: 0px;
+				width: 100%;
+				height: 100%;
+			}
+
+			#canvas {
+				background: #000;
+				border: 1px solid #fff;
+				margin: 0 auto;
+				max-height: 348px;
+				max-width: 1080px;
+				height: 100%;
+			}
+
+			#canvas canvas {
+				height: 348px;
+				max-width: 1080px;
+				width: 100%;
+				overflow: hidden;
+			}
+
+			#canvas img {
+				left: 0;
+				right: 0;
+				margin-left: auto;
+				margin-right: auto;
+				top: 5%;
+				position: absolute;
+				width: 225px;
+				z-index: 100;
+				text-align: center;
+			}
+		</style>
+</head>
 <body>
 <h1>Hudson Chase Master's Project</h1>
 <p>Concepts for IMMERSIVE VIRTUAL REALITY 
@@ -12,7 +51,7 @@ POINT CLOUD CLASSIFICATION CORRECTION
 
 <li><a href="http://127.0.0.1:8887/potree/VTdronetest.html"> VTDrone Test in Potree</a>
 
-<div style="height: 50%;">
+<div style="background-color: #000000">
 		<script src="lib/threejs/three.min.js"></script>
 		<script src="lib/threejs/OrbitControls.js"></script>
 		<script src="build/potree.min.js"></script>
@@ -30,21 +69,11 @@ POINT CLOUD CLASSIFICATION CORRECTION
 				var camera = new THREE.PerspectiveCamera(60, 1, 0.1, 1000);
 
 				var canvas = document.createElement("canvas");
-
-				canvas.style.background-color: "#000";
-			    canvas.style.width: "200px";
-			    canvas.style.height: "200px";
-			    canvas.style.border: "1px" solid black;
-			    canvas.style.margin: "100px";
-			    canvas.style.padding: "0px";
-			    canvas.style.position: "static"; /* fixed or static */
-			    canvas.style.top: "100px";
-			    canvas.style.left: "100px";
-				// canvas.style.position = "absolute";
-				// canvas.style.top = "0px";
-				// canvas.style.left = "0px";
-				// canvas.style.width = "50%";
-				// canvas.style.height = "50%";
+				canvas.style.position = "absolute";
+				canvas.style.top = "0px";
+				canvas.style.left = "0px";
+				canvas.style.width = "100%";
+				canvas.style.height = "100%";
 				document.body.appendChild(canvas);
 
 				var renderer = new THREE.WebGLRenderer(
