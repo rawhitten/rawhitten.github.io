@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html>
+<head>
+	<link rel="stylesheet" href="resize.css">
+</head>
 <body>
 <h1>Hudson Chase Master's Project</h1>
 <p>Concepts for IMMERSIVE VIRTUAL REALITY 
@@ -149,8 +152,8 @@ POINT CLOUD CLASSIFICATION CORRECTION
 
 				document.body.onresize = function()
 				{
-					var width = "75px";
-					var height = "50px";
+					var width = window.innerWidth;
+					var height = window.innerHeight;
 					
 					renderer.setSize(width, height);
 					camera.aspect = width / height;
