@@ -13,12 +13,10 @@ POINT CLOUD CLASSIFICATION CORRECTION
 <li><a href="http://127.0.0.1:8887/potree/VTdronetest.html"> VTDrone Test in Potree</a>
 <!-- http://127.0.0.1:8887/potree/VTdronetest.html -->
 
-<li><a href="http://127.0.0.1:8887/potree/VTdronetest.html"> VTDrone Test in Potree</a>
-
 <div style="background-color: #23426">
 		<script src="lib/threejs/three.min.js"></script>
 		<script src="lib/threejs/OrbitControls.js"></script>
-		<!-- <script src="build/potree.min.js"></script> -->
+		<script src="build/potree.min.js"></script>
 		<script src="build/potree.js"></script>
 		<script src="lib/threejs/VRButton.js"></script>
 		<script type="module">
@@ -51,11 +49,11 @@ POINT CLOUD CLASSIFICATION CORRECTION
 					antialias: true,
 					preserveDrawingBuffer: false,
 					powerPreference: "high-performance"
-					renderer.vr.enabled = true;
+					//renderer.vr.enabled = true;
 				});
 
-				renderer.vr.enabled = true;
-				document.body.appendChild( VRButton.createButton( renderer) );
+				// renderer.vr.enabled = true;
+				// document.body.appendChild( VRButton.createButton( renderer) );
 
 				var geometry = new THREE.BoxBufferGeometry(25, 1, 25);
 				var material = new THREE.MeshBasicMaterial({color: 0x44AA44});
@@ -145,7 +143,7 @@ POINT CLOUD CLASSIFICATION CORRECTION
 
 					controls.update();
 					renderer.render(scene, camera);
-					renderer.setVREnabled(true);
+					//renderer.setVREnabled(true)
 
 					requestAnimationFrame(loop);
 				};
