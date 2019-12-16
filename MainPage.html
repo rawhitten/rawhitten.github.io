@@ -1,44 +1,5 @@
 <!DOCTYPE html>
 <html>
-<head>
-			<style type="text/css">
-			body,
-			html {
-				background-color: #000000;
-				margin: 0px;
-				width: 50%;
-				height: 50%;
-			}
-
-			#canvas {
-				background: #000;
-				border: 1px solid #fff;
-				margin: 0 auto;
-				max-height: 348px;
-				max-width: 1080px;
-				height: 50%;
-			}
-
-			#canvas canvas {
-				height: 50%;
-				max-width: 1080px;
-				width: 50%;
-				overflow: hidden;
-			}
-
-			#canvas img {
-				left: 0;
-				right: 0;
-				margin-left: auto;
-				margin-right: auto;
-				top: 5%;
-				position: absolute;
-				width: 225px;
-				z-index: 100;
-				text-align: center;
-			}
-		</style>
-</head>
 <body>
 <h1>Hudson Chase Master's Project</h1>
 <p>Concepts for IMMERSIVE VIRTUAL REALITY 
@@ -188,8 +149,8 @@ POINT CLOUD CLASSIFICATION CORRECTION
 
 				document.body.onresize = function()
 				{
-					var width = window.innerWidth;
-					var height = window.innerHeight;
+					var width = "75px";
+					var height = "50px";
 					
 					renderer.setSize(width, height);
 					camera.aspect = width / height;
