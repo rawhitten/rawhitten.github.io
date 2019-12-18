@@ -100,12 +100,12 @@ POINT CLOUD CLASSIFICATION CORRECTION
 				// loadPointCloud("data/lion_takanawa/cloud.js", new THREE.Vector3(-2, -3, 0.0));
 				// loadPointCloud("data/lion_takanawa_las/cloud.js", new THREE.Vector3(3, -3, 0.0));
 				// loadPointCloud("data/lion_takanawa_laz/cloud.js", new THREE.Vector3(8, -3, 0.0));
-				//loadPointCloud("data/mypotree/cloud.js", new THREE.Vector3(-11, -4, -1));
-				loadPointCloud("http://5.9.65.151/mschuetz/potree/resources/pointclouds/faro/skatepark/cloud.js", new THREE.Vector3(-11, -4, -1));
+				loadPointCloud("data/mypotree/cloud.js", new THREE.Vector3(-11, -4, -1));
+				//loadPointCloud("data/mypotree", new THREE.Vector3(-11, -4, -1));
 				
 				//loadPointCloud("http://www.nearearthimaginglab.org/potree/tree/cloud.js", new THREE.Vector3(-11, -4, 0.0));
 
-				"http://5.9.65.151/mschuetz/potree/resources/pointclouds/faro/skatepark/cloud.js"
+				// "http://5.9.65.151/mschuetz/potree/resources/pointclouds/faro/skatepark/cloud.js"
 				// "http://5.9.65.151/mschuetz/potree/resources/pointclouds/weiss/subseamanifold2/cloud.js"
 
 				function loadPointCloud(url, position)
@@ -161,8 +161,8 @@ POINT CLOUD CLASSIFICATION CORRECTION
 				}
 				document.body.onresize();
 				
-				Potree.viewer.setVREnabled(true);
-				renderer.vr.enabled = true;
+				//Potree.viewer.setVREnabled(true);
+				//renderer.vr.enabled = true;
 				document.body.appendChild( VRButton.createButton( renderer ) );
 			};
 		</script>
