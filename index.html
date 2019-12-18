@@ -60,7 +60,7 @@
 			viewer.toggleSidebar();
 		});
 		
-		Potree.loadPointCloud("../pointclouds/lion_takanawa", "lion", function(e){
+		Potree.loadPointCloud("../data/mypotree/cloud.js", "tree", function(e){
 			viewer.scene.addPointCloud(e.pointcloud);
 
 			e.pointcloud.position.set(-4, -7, -1.1);
