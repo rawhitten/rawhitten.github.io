@@ -19,8 +19,11 @@
 	<div id="info"></a> Sprite Raycasting <br></div>
 
 	<script type="module">
-		import * as THREE from 'https://hudsonchase.github.io/libs/three.js/build/three.js';
-		import * from 'https://hudsonchase.github.io/lib/threejs/OrbitControls.js';
+		
+		import * as THREE from 'https://hudsonchase.github.io/build/three.module.js';
+
+		import { OrbitControls } from 'https://hudsonchase.github.io/jsm/controls/OrbitControls.js';
+
 		var renderer, scene, camera;
 		var controls, group;
 		init();
