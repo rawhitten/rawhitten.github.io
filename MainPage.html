@@ -8,9 +8,9 @@
 <p>Concepts for IMMERSIVE VIRTUAL REALITY 
 POINT CLOUD CLASSIFICATION CORRECTION
 </p>
-<!-- <li><a href="http://www.nearearthimaginglab.org/potree/blacksburg/">Blacksburg (classified) in Potree</a>
+<li><a href="http://www.nearearthimaginglab.org/potree/blacksburg/">Blacksburg (classified) in Potree</a>
 
-<li><a href="http://127.0.0.1:8887/potree/VTdronetest.html"> VTDrone Test in Potree</a> -->
+<li><a href="http://127.0.0.1:8887/potree/VTdronetest.html"> VTDrone Test in Potree</a>
 <!-- http://127.0.0.1:8887/potree/VTdronetest.html -->
 
 <div style="background-color: #23426">
@@ -22,13 +22,13 @@ POINT CLOUD CLASSIFICATION CORRECTION
 		<script type="module">
 
 			//need to link to correct library paths
-			//import { VRButton } from 'lib/threejs/VRButton.js';
+			import { VRButton } from 'https://hudsonchase.github.io/lib/threejs/VRButton.js';
 
 			document.body.onload = function()
 			{
 				//three.js
 				var scene = new THREE.Scene();
-				var camera = new THREE.PerspectiveCamera(60, 1, 0.1, 1000);
+				var camera = new THREE.PerspectiveCamera(100, 1, 0.1, );
 
 				var canvas = document.createElement("canvas");
 				canvas.style.position = "absolute";
@@ -49,11 +49,27 @@ POINT CLOUD CLASSIFICATION CORRECTION
 					antialias: true,
 					preserveDrawingBuffer: false,
 					powerPreference: "high-performance"
-					//renderer.vr.enabled = true;
+					
 				});
 
+				window.addEventListener( 'vrdisplaypresentchange', () =>  {
+      				const device = that.renderer.vr.getDevice();
+      				if ( (device && !device.isPresenting) || !device ){
+        				console.log("LEFT VR");
+        				that.renderer.vr.enabled = false;
+        				that.resetPerspectiveCamera();
+      				}
+      				else {
+        				console.log("ENTERED VR");
+        				that.renderer.vr.enabled = true;
+        				that.controls.enabled = false;
+				    }
+				    
+				  } );
 				//renderer.vr.enabled = true;
-				// document.body.appendChild( VRButton.createButton( renderer) );
+
+				document.body.appendChild( VRButton.createButton( renderer ) );
+				
 
 				var geometry = new THREE.BoxBufferGeometry(25, 1, 25);
 				var material = new THREE.MeshBasicMaterial({color: 0x44AA44});
@@ -136,19 +152,24 @@ POINT CLOUD CLASSIFICATION CORRECTION
 				}
 
 				
-
-				function loop()
-				{
-					cube.rotation.y += 0.00;
+				renderer.setAnimationLoop( function () {
 
 					controls.update();
-					renderer.render(scene, camera);
-					// renderer.vr.enabled = true;
-					// document.body.appendChild( VRButton.createButton( renderer ) );
 
-					requestAnimationFrame(loop);
-				};
-				loop();
+					renderer.render( scene, camera );
+
+				} );
+				// function loop()
+				// {
+				// 	cube.rotation.y += 0.00;
+
+				// 	controls.update();
+				// 	renderer.render(scene, camera);
+					
+
+				// 	requestAnimationFrame(loop);
+				// };
+				// loop();
 
 				document.body.onresize = function()
 				{
@@ -158,12 +179,14 @@ POINT CLOUD CLASSIFICATION CORRECTION
 					renderer.setSize(width, height);
 					camera.aspect = width / height;
 					camera.updateProjectionMatrix();
+					
 				}
 				document.body.onresize();
 				
+				
 				//Potree.viewer.setVREnabled(true);
 				//renderer.vr.enabled = true;
-				document.body.appendChild( VRButton.createButton( renderer ) );
+				
 			};
 		</script>
 	</div>
