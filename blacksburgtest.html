@@ -64,7 +64,7 @@
 			viewer.toggleSidebar();
 		});
 		
-		Potree.loadPointCloud("http://www.nearearthimaginglab.org/potree/blacksburg/cloud.js", "blacksburg", e => {
+		Potree.loadPointCloud("./data/mypotree/cloud.js", "blacksburg", e => {
 			let pointcloud = e.pointcloud;
 			let material = pointcloud.material;
 			viewer.scene.addPointCloud(pointcloud);
