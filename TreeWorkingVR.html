@@ -8,7 +8,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-	<title>Tree VR Test</title>
+	<title>Tree Potree VR</title>
 
 	<link rel="stylesheet" type="text/css" href="../build/potree/potree.css">
 	<link rel="stylesheet" type="text/css" href="../libs/jquery-ui/jquery-ui.min.css">
@@ -50,6 +50,8 @@
 		viewer.setFOV(60);
 		viewer.setPointBudget(3 * 1000 * 1000);
 		viewer.loadSettingsFromURL();
+		//viewer.scene.view.lookAt(12.713, 5.630, 3.945);
+		viewer.scene.view.position.set(38.748, 3.725, 15.082);
 		
 		viewer.loadGUI(() => {
 			viewer.setLanguage('en');
@@ -61,7 +63,7 @@
 		Potree.loadPointCloud("../data/mypotree/cloud.js", "Tree", function(e){
 			viewer.scene.addPointCloud(e.pointcloud);
 
-			e.pointcloud.position.set(-10, -15, -2);
+			e.pointcloud.position.set(0, -5, -2);
 			e.pointcloud.scale.set(1, 1, 1);
 			
 			const material = e.pointcloud.material;
@@ -70,6 +72,8 @@
 			material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
 			material.rgbGamma = 0.35;
 			material.rgbBrightness = -0.26;
+
+			//41.342, 11.359, 20.854
 		});
 
 
