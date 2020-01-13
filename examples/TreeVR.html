@@ -58,7 +58,7 @@
 			//viewer.toggleSidebar();
 		});
 		
-		Potree.loadPointCloud("./data/mypotree/cloud.js", "Tree", function(e){
+		Potree.loadPointCloud("/data/mypotree/cloud.js", "Tree", function(e){
 			viewer.scene.addPointCloud(e.pointcloud);
 
 			e.pointcloud.position.set(-10, -15, -2);
