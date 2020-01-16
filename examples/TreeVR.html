@@ -78,7 +78,7 @@
 		});
 
 
-		Potree.loadPointCloud("../data/mypotree/cloud.js", "tree", function(e){
+		Potree.loadPointCloud("data/mypotree/cloud.js", "tree", function(e){
 			let scene = viewer.scene;
 			let pointcloud = e.pointcloud;
 			
@@ -103,6 +103,9 @@
 				9.837547617156579,
 				13.798520822917606, 
 				2.569661863723081);
+
+			PointCloudOctree.pick()
+			getMousePointCloudIntersection()
 		});
 
 		const controls = new Potree.VRControlls(viewer);
