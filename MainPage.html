@@ -86,10 +86,15 @@ POINT CLOUD CLASSIFICATION CORRECTION
 				raycaster.params.Points.threshold = 1e-2;
 				var normalized = new THREE.Vector2();
 
+				// var arrow = new THREE.ArrowHelper( raycaster.ray.direction, raycaster.ray.origin, 100, Math.random() * 0xffffff );
+				// scene.add( arrow );
+
 				canvas.onmousemove = function(event)
 				{
 					normalized.set((event.clientX / canvas.width) * 2 - 1, -(event.clientY / canvas.height) * 2 + 1);
 					raycaster.setFromCamera(normalized, camera);
+					// arrow.setFromCamera(normalized, camera);
+					//scene.add( arrow );
 				}
 
 				canvas.ondblclick = function(event)
@@ -104,6 +109,8 @@ POINT CLOUD CLASSIFICATION CORRECTION
 						var sphere = new THREE.Mesh(geometry, material);
 						sphere.position.copy(intesects[0].point);
 						scene.add(sphere);
+						arrow.setFromCamera(normalized, camera);
+						scene.add(arrow);
 
 
 					}
