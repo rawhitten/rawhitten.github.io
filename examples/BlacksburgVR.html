@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
 	<title>BlacksburgVRTest</title>
 
-	<link rel="stylesheet" type="text/css" href="../build/potree/potree.css">
+	<link rel="stylesheet" type="text/css" href="../src/potree/potree.css">
 	<link rel="stylesheet" type="text/css" href="../libs/jquery-ui/jquery-ui.min.css">
 	<link rel="stylesheet" type="text/css" href="../libs/openlayers3/ol.css">
 	<link rel="stylesheet" type="text/css" href="../libs/spectrum/spectrum.css">
@@ -33,6 +33,8 @@
 	<script src="../build/potree/potree.js"></script>
 	<script src="../libs/plasio/js/laslaz.js"></script>
 	<script src="../libs/other/OBJLoader.js"></script>
+	<script src="../libs/other/Stats.js"></script>
+	
 	
 	<!-- INCLUDE ADDITIONAL DEPENDENCIES HERE -->
 	<!-- INCLUDE SETTINGS HERE -->
@@ -58,7 +60,7 @@
 			//viewer.toggleSidebar();
 		});
 		
-		Potree.loadPointCloud("http://www.nearearthimaginglab.org/potree/blacksburg/cloud.js", "blacksburg", function(e){
+		Potree.loadPointCloud("data/mypotree/cloud.js", "Tree", function(e){
 			viewer.scene.addPointCloud(e.pointcloud);
 
 			e.pointcloud.position.set(-10, -15, -2);

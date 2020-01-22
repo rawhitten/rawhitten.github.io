@@ -27,12 +27,13 @@
 	<script src="../libs/tween/tween.min.js"></script>
 	<script src="../libs/d3/d3.js"></script>
 	<script src="../libs/proj4/proj4.js"></script>
-	<!-- <script src="../libs/openlayers3/ol.js"></script> -->
+	<script src="../libs/openlayers3/ol.js"></script>
 	<script src="../libs/i18next/i18next.js"></script>
 	<script src="../libs/jstree/jstree.js"></script>
-	<script src="../build/potree/potree.js"></script>
+	<script src="../src/potree/potree.js"></script>
 	<script src="../libs/plasio/js/laslaz.js"></script>
 	<script src="../libs/other/OBJLoader.js"></script>
+	<script src="../libs/other/Stats.js"></script>
 	
 	<!-- INCLUDE ADDITIONAL DEPENDENCIES HERE -->
 	<!-- INCLUDE SETTINGS HERE -->
@@ -78,7 +79,7 @@
 		});
 
 
-		Potree.loadPointCloud("data/mypotree/cloud.js", "tree", function(e){
+		Potree.loadPointCloud("../data/mypotree/cloud.js", "tree", function(e){
 			let scene = viewer.scene;
 			let pointcloud = e.pointcloud;
 			
@@ -91,22 +92,22 @@
 			
 			scene.addPointCloud(pointcloud);
 			
-			scene.view.setView(
-				[-2.647, -3.353, 22.175],
-				[16.179, 16.701, 2.129],
-			);
+			// scene.setView(
+			// 	[-2.647, -3.353, 22.175],
+			// 	[16.179, 16.701, 2.129],
+			// );
 		});
 
-		viewer.onVr( () => {
+		// viewer.onVr( () => {
 
-			viewer.vr.node.position.set( 
-				9.837547617156579,
-				13.798520822917606, 
-				2.569661863723081);
+		// 	viewer.vr.node.position.set( 
+		// 		9.837547617156579,
+		// 		13.798520822917606, 
+		// 		2.569661863723081);
 
-			PointCloudOctree.pick()
-			getMousePointCloudIntersection()
-		});
+		// 	PointCloudOctree.pick()
+		// 	getMousePointCloudIntersection()
+		// });
 
 		const controls = new Potree.VRControlls(viewer);
 		controls.speed = 2;

@@ -27,7 +27,7 @@
 	<script src="libs/openlayers3/ol.js"></script>
     <script src="libs/i18next/i18next.js"></script>
 	
-	<script src="libs/Potree.js"></script>
+	<script src="libs/potree/potree.js"></script>
 	
 	<script src="libs/plasio/js/laslaz.js"></script>
 	<script src="libs/plasio/vendor/bluebird.js"></script>
@@ -80,7 +80,7 @@
 			//viewer.toggleSidebar();
 		});
 		
-		Potree.loadPointCloud("../pointclouds/VTdrone/cloud.js", "VTdrone", e => {
+		Potree.loadPointCloud("./pointclouds/index/cloud.js", "index", e => {
 			viewer.scene.addPointCloud(e.pointcloud);
 			viewer.fitToScreen();
 		});
