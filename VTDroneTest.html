@@ -6,14 +6,26 @@
   <body>
 
     <a-scene potree-loader="pointBudget: 1;">
-      <a-entity 
-        potree-loader="src: http://172.30.91.121:8887/potree/VTdronetest.html;
+      <!-- <a-entity 
+        potree-loader="src: ./code/pointclouds/VTdrone/;
       pointSize: 0.005;"
       position="0 1 -40"
       rotation="-90 0 0"
       Bscale="0.01 0.01 0.01"
       scale="0.01 0.01 0.01"
+      ></a-entity> -->
+
+      <a-entity 
+      class="collidable" 
+        potree-loader="src: https://raw.githubusercontent.com/potree/potree/develop/pointclouds/lion_takanawa;
+      pointSize: 0.005;"
+      position="0 1 0"
+      rotation="-90 0 0"
+      Bscale="0.01 0.01 0.01"
+      scale="0.01 0.01 0.01"
+      class="collidable" 
       ></a-entity>
+
    </a-scene>
   </body>
 </html>

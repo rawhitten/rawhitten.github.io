@@ -86,7 +86,7 @@
 		
 		// Sigeom
 		//Potree.loadPointCloud("./pointclouds/morro_bay_converted/cloud.js", "CA13", function(e){
-		Potree.loadPointCloud("./data/mypotree/cloud.js", "mypotree", function(e){
+		Potree.loadPointCloud("./data/VTdrone/cloud.js", "mypotree", function(e){
 			viewer.scene.addPointCloud(e.pointcloud);
 			e.pointcloud.position.z = 0;
 			let material = e.pointcloud.material;

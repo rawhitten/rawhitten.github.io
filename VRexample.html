@@ -7,33 +7,33 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Potree Viewer</title>
 
-	<link rel="stylesheet" type="text/css" href="libs/potree/potree.css">
-	<link rel="stylesheet" type="text/css" href="libs/jquery-ui/jquery-ui.min.css">
-	<link rel="stylesheet" type="text/css" href="libs/perfect-scrollbar/css/perfect-scrollbar.css">
-	<link rel="stylesheet" href="libs/openlayers3/ol.css" type="text/css">
+	<link rel="stylesheet" type="text/css" href="./build/potree/potree.css">
+	<link rel="stylesheet" type="text/css" href="./libs/jquery-ui/jquery-ui.min.css">
+	<link rel="stylesheet" type="text/css" href="./libs/perfect-scrollbar/css/perfect-scrollbar.css">
+	<link rel="stylesheet" href="./libs/openlayers3/ol.css" type="text/css">
   </head>
 
   <body>
-  	<script src="libs/jquery-ui/jquery-ui.min.js"></script>
-	<script src="libs/jquery/jquery-3.1.1.min.js"></script>
-	<script src="libs/perfect-scrollbar/js/perfect-scrollbar.jquery.js"></script>
+  	<script src="./libs/jquery-ui/jquery-ui.min.js"></script>
+	<script src="./libs/jquery/jquery-3.1.1.min.js"></script>
+	<script src="./libs/perfect-scrollbar/js/perfect-scrollbar.jquery.js"></script>
 	
-	<script src="libs/three.js/build/three.min.js"></script>
-	<script src="libs/other/stats.min.js"></script>
-	<script src="libs/other/BinaryHeap.js"></script>
-	<script src="libs/tween/tween.min.js"></script>
-	<script src="libs/d3/d3.js"></script>
-	<script src="libs/proj4/proj4.js"></script>
-	<script src="libs/openlayers3/ol.js"></script>
-    <script src="libs/i18next/i18next.js"></script>
+	<script src="./libs/three.js/build/three.min.js"></script>
+	<!-- <script src="./libs/other/stats.min.js"></script> -->
+	<script src="./libs/other/BinaryHeap.js"></script>
+	<script src="./libs/tween/tween.min.js"></script>
+	<script src="./libs/d3/d3.js"></script>
+	<script src="./libs/proj4/proj4.js"></script>
+	<script src="./libs/openlayers3/ol.js"></script>
+    <script src="./libs/i18next/i18next.js"></script>
 	
-	<script src="libs/potree/potree.js"></script>
+	<script src="./build/potree/potree.js"></script>
 	
-	<script src="libs/plasio/js/laslaz.js"></script>
-	<script src="libs/plasio/vendor/bluebird.js"></script>
-	<script src="libs/VRControls.js"></script>
-	<script src="libs/VREffect.js"></script>
-	<script src="libs/WebVR.js"></script>
+	<script src="./libs/plasio/js/laslaz.js"></script>
+	<script src="./libs/plasio/vendor/bluebird.js"></script>
+	<script src="./libs/VRControls.js"></script>
+	<script src="./libs/VREffect.js"></script>
+	<script src="./libs/WebVR.js"></script>
 
 
 
@@ -81,7 +81,7 @@
 			//viewer.toggleSidebar();
 		});
 		
-		Potree.loadPointCloud("data/index/cloud.js", "index", e => {
+		Potree.loadPointCloud("./data/index/cloud.js", "index", e => {
 			viewer.scene.addPointCloud(e.pointcloud);
 			viewer.fitToScreen();
 		});

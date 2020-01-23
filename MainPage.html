@@ -14,15 +14,18 @@ POINT CLOUD CLASSIFICATION CORRECTION
 <!-- http://127.0.0.1:8887/potree/VTdronetest.html -->
 
 <div style="background-color: #23426">
-		<script src="lib/threejs/three.min.js"></script>
-		<script src="lib/threejs/OrbitControls.js"></script>
-		<script src="build/potree.min.js"></script>
-		<script src="build/potree.js"></script>
-		<script src="lib/threejs/VRButton.js"></script>
+		<script src="./lib/threejs/three.min.js"></script>
+		<script src="./lib/threejs/OrbitControls.js"></script>
+		<script src="./build/potree.min.js"></script>
+		<script src="./build/potree.js"></script>
+		<script src="./build/potree.js"></script>
+		<script src="./src/loader/PointAttributes.js" type="module"></script>
+
+		<script src="./lib/threejs/VRButton.js" type="module"></script>
 		<script type="module">
 
 			//need to link to correct library paths
-			import { VRButton } from 'https://hudsonchase.github.io/lib/threejs/VRButton.js';
+			import { VRButton } from './lib/threejs/VRButton.js' ;
 
 			document.body.onload = function()
 			{
@@ -49,8 +52,11 @@ POINT CLOUD CLASSIFICATION CORRECTION
 					antialias: true,
 					preserveDrawingBuffer: false,
 					powerPreference: "high-performance"
-					
+										
 				});
+				//renderer.xr.enabled = true;
+
+				document.body.appendChild( VRButton.createButton( renderer ) );
 
 				window.addEventListener( 'vrdisplaypresentchange', () =>  {
       				const device = that.renderer.vr.getDevice();
@@ -68,7 +74,7 @@ POINT CLOUD CLASSIFICATION CORRECTION
 				  } );
 				//renderer.vr.enabled = true;
 
-				document.body.appendChild( VRButton.createButton( renderer ) );
+				//document.body.appendChild( VRButton.createButton( renderer ) );
 				
 
 				var geometry = new THREE.BoxBufferGeometry(25, 1, 25);
@@ -109,11 +115,18 @@ POINT CLOUD CLASSIFICATION CORRECTION
 						var sphere = new THREE.Mesh(geometry, material);
 						sphere.position.copy(intesects[0].point);
 						scene.add(sphere);
-						arrow.setFromCamera(normalized, camera);
-						scene.add(arrow);
-
-
+						//arrow.setFromCamera(normalized, camera);
+						//scene.add(arrow);
+						var attr = PointAttribute.CLASSIFICATION(intersects[0].point);
+						console.log(attr);
 					}
+
+					// scene.
+
+					// var intersects2 = raycaster.intersectObject(scene,true);
+  			// 		if (intersects2.length === 0) return;
+
+  			// 		let faceIndex = intersects2[0].faceIndex;
 				}
 
 				Potree.Global.workerPath = "./source";
@@ -155,6 +168,9 @@ POINT CLOUD CLASSIFICATION CORRECTION
 						material.shape = Potree.PointShape.CIRCLE; //CIRCLE | SQUARE
 
 						points.add(pointcloud);
+
+						// var particles = new THREE.Points( pointcloud );
+						// scene.add( particles );
 					});
 				}
 

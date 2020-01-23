@@ -141,47 +141,47 @@
 		}
 	};
 
-	Potree.Actions = {};
-
-	Potree.Actions.ToggleAnnotationVisibility = class ToggleAnnotationVisibility extends Potree.Action {
-		constructor (args = {}) {
-			super(args);
-
-			this.icon = Potree.resourcePath + '/icons/eye.svg';
-			this.showIn = 'sidebar';
-			this.tooltip = 'toggle visibility';
-		}
-
-		pairWith (annotation) {
-			if (annotation.visible) {
-				this.setIcon(Potree.resourcePath + '/icons/eye.svg');
-			} else {
-				this.setIcon(Potree.resourcePath + '/icons/eye_crossed.svg');
-			}
-
-			annotation.addEventListener('visibility_changed', e => {
-				let annotation = e.annotation;
-
-				if (annotation.visible) {
-					this.setIcon(Potree.resourcePath + '/icons/eye.svg');
-				} else {
-					this.setIcon(Potree.resourcePath + '/icons/eye_crossed.svg');
-				}
-			});
-		}
-
-		onclick (event) {
-			let annotation = event.annotation;
-
-			annotation.visible = !annotation.visible;
-
-			if (annotation.visible) {
-				this.setIcon(Potree.resourcePath + '/icons/eye.svg');
-			} else {
-				this.setIcon(Potree.resourcePath + '/icons/eye_crossed.svg');
-			}
-		}
-	};
+	//Potree.Actions = {};
+	//
+	//Potree.Actions.ToggleAnnotationVisibility = class ToggleAnnotationVisibility extends Potree.Action {
+	//	constructor (args = {}) {
+	//		super(args);
+	//
+	//		this.icon = Potree.resourcePath + '/icons/eye.svg';
+	//		this.showIn = 'sidebar';
+	//		this.tooltip = 'toggle visibility';
+	//	}
+	//
+	//	pairWith (annotation) {
+	//		if (annotation.visible) {
+	//			this.setIcon(Potree.resourcePath + '/icons/eye.svg');
+	//		} else {
+	//			this.setIcon(Potree.resourcePath + '/icons/eye_crossed.svg');
+	//		}
+	//
+	//		annotation.addEventListener('visibility_changed', e => {
+	//			let annotation = e.annotation;
+	//
+	//			if (annotation.visible) {
+	//				this.setIcon(Potree.resourcePath + '/icons/eye.svg');
+	//			} else {
+	//				this.setIcon(Potree.resourcePath + '/icons/eye_crossed.svg');
+	//			}
+	//		});
+	//	}
+	//
+	//	onclick (event) {
+	//		let annotation = event.annotation;
+	//
+	//		annotation.visible = !annotation.visible;
+	//
+	//		if (annotation.visible) {
+	//			this.setIcon(Potree.resourcePath + '/icons/eye.svg');
+	//		} else {
+	//			this.setIcon(Potree.resourcePath + '/icons/eye_crossed.svg');
+	//		}
+	//	}
+	//};
 
 	class PathAnimation{
 		
@@ -7161,6 +7161,25 @@ void main() {
 			}
 		}
 
+		get minSize(){
+			return this.uniforms.minSize.value;
+		}
+
+		set minSize(value){
+			if (this.uniforms.minSize.value !== value) {
+				this.uniforms.minSize.value = value;
+
+				this.dispatchEvent({
+					type: 'point_size_changed',
+					target: this
+				});
+				this.dispatchEvent({
+					type: 'material_property_changed',
+					target: this
+				});
+			}
+		}
+
 		get elevationRange () {
 			return this.uniforms.elevationRange.value;
 		}
@@ -10966,28 +10985,10 @@ void main() {
 					//gl.uniformMatrix4fv(lClipSpheres, false, material.uniforms.clipSpheres.value);
 				}
 
-				//if(Potree.Features.WEBGL2.isSupported()){
-				//	let buffer = new ArrayBuffer(12);
-				//	let bufferf32 = new Float32Array(buffer);
-				//	bufferf32[0] = material.size;
-				//	bufferf32[1] = material.uniforms.minSize.value;
-				//	bufferf32[2] = material.uniforms.maxSize.value;
 
-				//	let block = shader.uniformBlocks["ubo_point"];
-
-				//	gl.bindBufferBase(gl.UNIFORM_BUFFER, 0, block.buffer);
-
-				//	gl.bindBuffer(gl.UNIFORM_BUFFER, block.buffer);
-				//	gl.bufferSubData(gl.UNIFORM_BUFFER, 0, buffer);
-				//	gl.bindBuffer(gl.UNIFORM_BUFFER, null);
-				//	
-				//}else{
-					shader.setUniform1f("size", material.size);
-					shader.setUniform1f("maxSize", material.uniforms.maxSize.value);
-					shader.setUniform1f("minSize", material.uniforms.minSize.value);
-				//}
-
-
+				shader.setUniform1f("size", material.size);
+				shader.setUniform1f("maxSize", material.uniforms.maxSize.value);
+				shader.setUniform1f("minSize", material.uniforms.minSize.value);
 
 
 				// uniform float uPCIndex
@@ -22082,7 +22083,10 @@ ENDSEC
 				<ul class="pv-menu-list">
 
 				<li>
-				<span data-i18n="appearance.point_size"></span>:<span id="lblPointSize"></span> <div id="sldPointSize"></div>
+				<span data-i18n="appearance.point_size"></span>:&nbsp;<span id="lblPointSize"></span> <div id="sldPointSize"></div>
+				</li>
+				<li>
+				<span data-i18n="appearance.min_point_size"></span>:&nbsp;<span id="lblMinPointSize"></span> <div id="sldMinPointSize"></div>
 				</li>
 
 				<!-- SIZE TYPE -->
@@ -22251,6 +22255,27 @@ ENDSEC
 				let update = (e) => {
 					lblPointSize.html(material.size.toFixed(2));
 					sldPointSize.slider({value: material.size});
+				};
+				this.addVolatileListener(material, "point_size_changed", update);
+				
+				update();
+			}
+
+			{ // MINIMUM POINT SIZE
+				let sldMinPointSize = panel.find(`#sldMinPointSize`);
+				let lblMinPointSize = panel.find(`#lblMinPointSize`);
+
+				sldMinPointSize.slider({
+					value: material.size,
+					min: 0,
+					max: 3,
+					step: 0.01,
+					slide: function (event, ui) { material.minSize = ui.value; }
+				});
+
+				let update = (e) => {
+					lblMinPointSize.html(material.minSize.toFixed(2));
+					sldMinPointSize.slider({value: material.minSize});
 				};
 				this.addVolatileListener(material, "point_size_changed", update);
 				
@@ -22458,7 +22483,7 @@ ENDSEC
 						blockElevation.css('display', 'block');
 					} else if (selectedValue === 'RGBA') {
 						blockRGB.css('display', 'block');
-					} else if (selectedValue === 'Color') {
+					} else if (selectedValue === 'color') {
 						blockColor.css('display', 'block');
 					} else if (selectedValue === 'intensity') {
 						blockIntensity.css('display', 'block');
@@ -24033,7 +24058,12 @@ ENDSEC
 				let elInput = element.find('input');
 
 				elInput.click( () => {
-					// TODO
+					const classifications = this.viewer.classifications;
+		
+					for(let key of Object.keys(classifications)){
+						let value = classifications[key];
+						this.viewer.setClassificationVisibility(key, !value.visible);
+					}
 				});
 
 				elClassificationList.append(element);
@@ -24236,7 +24266,7 @@ ENDSEC
 				Potree.resourcePath + '/icons/fps_controls.svg',
 				'[title]tt.flight_control',
 				() => {
-					this.viewer.setControls(this.viewer.firstPersonControls);
+					this.viewer.setControls(this.viewer.fpControls);
 					this.viewer.fpControls.lockElevation = false;
 				}
 			));
@@ -24245,7 +24275,7 @@ ENDSEC
 				Potree.resourcePath + '/icons/helicopter_controls.svg',
 				'[title]tt.heli_control',
 				() => { 
-					this.viewer.setControls(this.viewer.firstPersonControls);
+					this.viewer.setControls(this.viewer.fpControls);
 					this.viewer.fpControls.lockElevation = true;
 				}
 			));
@@ -27274,13 +27304,6 @@ ENDSEC
 				this.fpControls.enabled = false;
 				this.fpControls.addEventListener('start', this.disableAnnotations.bind(this));
 				this.fpControls.addEventListener('end', this.enableAnnotations.bind(this));
-				// this.fpControls.addEventListener("double_click_move", (event) => {
-				//	let distance = event.targetLocation.distanceTo(event.position);
-				//	this.setMoveSpeed(Math.pow(distance, 0.4));
-				// });
-				// this.fpControls.addEventListener("move_speed_changed", (event) => {
-				//	this.setMoveSpeed(this.fpControls.moveSpeed);
-				// });
 			}
 
 			// { // create GEO CONTROLS
@@ -28569,9 +28592,9 @@ ENDSEC
 		}
 
 		update (delta) {
-			const view = this.scene.view;
+			// const view = this.scene.view;
 
-			let prevTotal = this.shearCam.projectionMatrix.elements.reduce( (a, i) => a + i, 0);
+			// let prevTotal = this.shearCam.projectionMatrix.elements.reduce( (a, i) => a + i, 0);
 
 			//const progression = Math.min(1, this.fadeFactor * delta);
 			//const attenuation = Math.max(0, 1 - this.fadeFactor * delta);
@@ -28689,15 +28712,116 @@ ENDSEC
 				// resolution: { value: new THREE.Vector2() }
 				tColor: {value: new THREE.Texture() },
 				uNear: {value: 0.0},
-				uOpacity: {value: 0.5},
+				uOpacity: {value: 1.0},
 			},
 			vertexShader: vertexShader,
 			fragmentShader: fragmentShader,
 			side: THREE.DoubleSide,
 		} );
+
 		material.side = THREE.DoubleSide;
+
 		return material;
 	}
+
+	const planeGeometry = new THREE.PlaneGeometry(1, 1);
+	const lineGeometry = new THREE.Geometry();
+
+	lineGeometry.vertices.push(
+		new THREE.Vector3(-0.5, -0.5, 0),
+		new THREE.Vector3( 0.5, -0.5, 0),
+		new THREE.Vector3( 0.5,  0.5, 0),
+		new THREE.Vector3(-0.5,  0.5, 0),
+		new THREE.Vector3(-0.5, -0.5, 0),
+	);
+
+	class OrientedImage$1{
+
+		constructor(id){
+
+			this.id = id;
+			this.fov = 1.0;
+			this.position = new THREE.Vector3();
+			this.rotation = new THREE.Vector3();
+			this.width = 0;
+			this.height = 0;
+			this.fov = 1.0;
+
+			const material = createMaterial();
+			const lineMaterial = new THREE.LineBasicMaterial( { color: 0x00ff00 } );
+			this.mesh = new THREE.Mesh(planeGeometry, material);
+			this.line = new THREE.Line(lineGeometry, lineMaterial);
+			this.texture = null;
+
+			this.mesh.orientedImage = this;
+		}
+
+		// setPosition(x, y, z){
+		// 	this.position.set(x, y, z);
+		// 	this.mesh.position.set(x, y, z);
+
+		// 	this.updateTransform();
+		// }
+
+		// setDimension(width, height){
+		// 	this.width = width;
+		// 	this.height = height;
+		// 	this.mesh.scale.set(width / height, 1, 1);
+
+		// 	this.updateTransform();
+		// }
+
+		// setRotation(omega, phi, kappa){
+
+		// 	const [rx, ry, rz] = [omega, phi, kappa]
+		// 		.map(THREE.Math.degToRad);
+
+		// 	this.rotation.set(rx, ry, rz);
+		// 	this.mesh.rotation.set(rx, ry, rz);
+
+		// 	this.updateTransform();
+		// }
+
+		// setFov(fov){
+		// 	this.fov = fov;
+
+		// 	this.updateTransform();
+		// }
+
+		set(position, rotation, dimension, fov){
+
+			let radians = rotation.map(THREE.Math.degToRad);
+
+			this.position.set(...position);
+			this.mesh.position.set(...position);
+
+			this.rotation.set(...radians);
+			this.mesh.rotation.set(...radians);
+
+			[this.width, this.height] = dimension;
+			this.mesh.scale.set(this.width / this.height, 1, 1);
+
+			this.fov = fov;
+
+			this.updateTransform();
+		}
+
+		updateTransform(){
+			let {mesh, line, fov} = this;
+
+			mesh.updateMatrixWorld();
+			const dir = mesh.getWorldDirection();
+			const alpha = THREE.Math.degToRad(fov / 2);
+			const d = -0.5 / Math.tan(alpha);
+			const move = dir.clone().multiplyScalar(d);
+			mesh.position.add(move);
+
+			line.position.copy(mesh.position);
+			line.scale.copy(mesh.scale);
+			line.rotation.copy(mesh.rotation);
+		}
+
+	};
 
 	class OrientedImages extends EventDispatcher{
 
@@ -28804,6 +28928,9 @@ ENDSEC
 				imageParams.push(params);
 			}
 
+			// debug
+			//return [imageParams[50]];
+
 			return imageParams;
 		}
 
@@ -28822,16 +28949,16 @@ ENDSEC
 			const tEnd = performance.now();
 			console.log(tEnd - tStart);
 
-			const sp = new THREE.PlaneGeometry(1, 1);
-			const lg = new THREE.Geometry();
+			// const sp = new THREE.PlaneGeometry(1, 1);
+			// const lg = new THREE.Geometry();
 
-			lg.vertices.push(
-				new THREE.Vector3(-0.5, -0.5, 0),
-				new THREE.Vector3( 0.5, -0.5, 0),
-				new THREE.Vector3( 0.5,  0.5, 0),
-				new THREE.Vector3(-0.5,  0.5, 0),
-				new THREE.Vector3(-0.5, -0.5, 0),
-			);
+			// lg.vertices.push(
+			// 	new THREE.Vector3(-0.5, -0.5, 0),
+			// 	new THREE.Vector3( 0.5, -0.5, 0),
+			// 	new THREE.Vector3( 0.5,  0.5, 0),
+			// 	new THREE.Vector3(-0.5,  0.5, 0),
+			// 	new THREE.Vector3(-0.5, -0.5, 0),
+			// );
 
 			const {width, height} = cameraParams;
 			const orientedImages = [];
@@ -28840,42 +28967,44 @@ ENDSEC
 
 			for(const params of imageParams){
 
-				const material = createMaterial();
-				const lm = new THREE.LineBasicMaterial( { color: 0x00ff00 } );
-				const mesh = new THREE.Mesh(sp, material);
+				// const material = createMaterial();
+				// const lm = new THREE.LineBasicMaterial( { color: 0x00ff00 } );
+				// const mesh = new THREE.Mesh(sp, material);
 
 				const {x, y, z, omega, phi, kappa} = params;
-				const [rx, ry, rz] = [omega, phi, kappa]
-					.map(THREE.Math.degToRad);
+				// const [rx, ry, rz] = [omega, phi, kappa]
+				// 	.map(THREE.Math.degToRad);
 				
-				mesh.position.set(x, y, z);
-				mesh.scale.set(width / height, 1, 1);
-				mesh.rotation.set(rx, ry, rz);
-				{
-					mesh.updateMatrixWorld();
-					const dir = mesh.getWorldDirection();
-					const alpha = THREE.Math.degToRad(cameraParams.fov / 2);
-					const d = -0.5 / Math.tan(alpha);
-					const move = dir.clone().multiplyScalar(d);
-					mesh.position.add(move);
-				}
-				sceneNode.add(mesh);
-				material.uniforms.uOpacity.value = 1.0;
+				// mesh.position.set(x, y, z);
+				// mesh.scale.set(width / height, 1, 1);
+				// mesh.rotation.set(rx, ry, rz);
+				// {
+				// 	mesh.updateMatrixWorld();
+				// 	const dir = mesh.getWorldDirection();
+				// 	const alpha = THREE.Math.degToRad(cameraParams.fov / 2);
+				// 	const d = -0.5 / Math.tan(alpha);
+				// 	const move = dir.clone().multiplyScalar(d);
+				// 	mesh.position.add(move);
+				// }
+				// sceneNode.add(mesh);
 
-				const line = new THREE.Line(lg, lm);
-				line.position.copy(mesh.position);
-				line.scale.copy(mesh.scale);
-				line.rotation.copy(mesh.rotation);
-				sceneNode.add(line);
+				// const line = new THREE.Line(lg, lm);
+				// line.position.copy(mesh.position);
+				// line.scale.copy(mesh.scale);
+				// line.rotation.copy(mesh.rotation);
+				// sceneNode.add(line);
 
-				const orientedImage = {
-					mesh: mesh,
-					texture: null,
-					line: line,
-					params: params,
-					dimension:  [cameraParams.width, cameraParams.height],
-				};
-				mesh.orientedImage = orientedImage;
+				let orientedImage = new OrientedImage$1(params.id);
+				// orientedImage.setPosition(x, y, z);
+				// orientedImage.setRotation(omega, phi, kappa);
+				// orientedImage.setDimension(width, height);
+				let position = [x, y, z];
+				let rotation = [omega, phi, kappa];
+				let dimension = [width, height];
+				orientedImage.set(position, rotation, dimension, cameraParams.fov);
+
+				sceneNode.add(orientedImage.mesh);
+				sceneNode.add(orientedImage.line);
 				
 				orientedImages.push(orientedImage);
 			}
@@ -28969,6 +29098,45 @@ ENDSEC
 				//console.log(tEnd - tStart);
 			};
 
+			const moveToImage = (image) => {
+				console.log("move to image " + image.id);
+
+				const mesh = image.mesh;
+				const newCamPos = image.position.clone();
+				const newCamTarget = mesh.position.clone();
+
+				viewer.scene.view.setView(newCamPos, newCamTarget, 500, () => {
+					orientedImageControls.capture(image);
+				});
+
+				if(image.texture === null){
+
+					const target = image;
+
+					const tmpImagePath = `${Potree.resourcePath}/images/loading.jpg`;
+					new THREE.TextureLoader().load(tmpImagePath,
+						(texture) => {
+							if(target.texture === null){
+								target.texture = texture;
+								target.mesh.material.uniforms.tColor.value = texture;
+								mesh.material.needsUpdate = true;
+							}
+						}
+					);
+
+					const imagePath = `${imageParamsPath}/../${target.id}`;
+					new THREE.TextureLoader().load(imagePath,
+						(texture) => {
+							target.texture = texture;
+							target.mesh.material.uniforms.tColor.value = texture;
+							mesh.material.needsUpdate = true;
+						}
+					);
+					
+
+				}
+			};
+
 			const onMouseClick = (evt) => {
 
 				if(orientedImageControls.hasSomethingCaptured()){
@@ -28976,48 +29144,7 @@ ENDSEC
 				}
 
 				if(hoveredElement){
-					console.log("move to image " + hoveredElement.params.id);
-
-					const mesh = hoveredElement.mesh;
-					const newCamPos = new THREE.Vector3( 
-						hoveredElement.params.x,
-						hoveredElement.params.y,
-						hoveredElement.params.z
-					);
-					const newCamTarget = mesh.position.clone();
-
-					viewer.scene.view.setView(newCamPos, newCamTarget, 500, () => {
-						orientedImageControls.capture(hoveredElement.params);
-					});
-
-					if(hoveredElement.texture === null){
-
-						const target = hoveredElement;
-
-						const tmpImagePath = `${Potree.resourcePath}/images/loading.jpg`;
-						new THREE.TextureLoader().load(tmpImagePath,
-							(texture) => {
-								if(target.texture === null){
-									target.texture = texture;
-									target.mesh.material.uniforms.tColor.value = texture;
-									mesh.material.needsUpdate = true;
-								}
-							}
-						);
-
-						const imagePath = `${imageParamsPath}/../${target.params.id}`;
-						new THREE.TextureLoader().load(imagePath,
-							(texture) => {
-								target.texture = texture;
-								target.mesh.material.uniforms.tColor.value = texture;
-								mesh.material.needsUpdate = true;
-							}
-						);
-						
-
-					}
-
-
+					moveToImage(hoveredElement);
 				}
 			};
 			viewer.renderer.domElement.addEventListener( 'mousemove', onMouseMove, false );
@@ -29027,8 +29154,8 @@ ENDSEC
 
 				for(const image of orientedImages){
 					const world = image.mesh.matrixWorld;
-					const {dimension} = image;
-					const aspect = dimension[0] / dimension[1];
+					const {width, height} = image;
+					const aspect = width / height;
 
 					const camera = viewer.scene.getActiveCamera();
 
@@ -29059,9 +29186,310 @@ ENDSEC
 			images.imageParams = imageParams;
 			images.images = orientedImages;
 
+			Potree.debug.moveToImage = moveToImage;
+
 			return images;
 		}
 	}
+
+	class OctreeGeometry{
+
+		constructor(){
+			this.url = null;
+			this.spacing = 0;
+			this.boundingBox = null;
+			this.root = null;
+			this.pointAttributes = null;
+			this.loader = null;
+		}
+
+	};
+
+	class OctreeGeometryNode{
+
+		constructor(name, octreeGeometry, boundingBox){
+			this.id = OctreeGeometryNode.IDCount++;
+			this.name = name;
+			this.index = parseInt(name.charAt(name.length - 1));
+			this.octreeGeometry = octreeGeometry;
+			this.boundingBox = boundingBox;
+			this.boundingSphere = boundingBox.getBoundingSphere(new THREE.Sphere());
+			this.children = {};
+			this.numPoints = 0;
+			this.level = null;
+			this.oneTimeDisposeHandlers = [];
+		}
+
+		isGeometryNode(){
+			return true;
+		}
+
+		getLevel(){
+			return this.level;
+		}
+
+		isTreeNode(){
+			return false;
+		}
+
+		isLoaded(){
+			return this.loaded;
+		}
+
+		getBoundingSphere(){
+			return this.boundingSphere;
+		}
+
+		getBoundingBox(){
+			return this.boundingBox;
+		}
+
+		getChildren(){
+			let children = [];
+
+			for (let i = 0; i < 8; i++) {
+				if (this.children[i]) {
+					children.push(this.children[i]);
+				}
+			}
+
+			return children;
+		}
+
+		getBoundingBox(){
+			return this.boundingBox;
+		}
+
+		loadPoints(){
+			this.octreeGeometry.loader.load(this);
+		}
+
+		load(){
+			if (this.loading === true || this.loaded === true || Potree.numNodesLoading >= Potree.maxNodesLoading) {
+				return;
+			}
+
+			this.loading = true;
+
+			Potree.numNodesLoading++;
+
+			this.loadPoints();
+		}
+
+		getNumPoints(){
+			return this.numPoints;
+		}
+
+		dispose(){
+			if (this.geometry && this.parent != null) {
+				this.geometry.dispose();
+				this.geometry = null;
+				this.loaded = false;
+
+				// this.dispatchEvent( { type: 'dispose' } );
+				for (let i = 0; i < this.oneTimeDisposeHandlers.length; i++) {
+					let handler = this.oneTimeDisposeHandlers[i];
+					handler();
+				}
+				this.oneTimeDisposeHandlers = [];
+			}
+		}
+
+	};
+
+	OctreeGeometryNode.IDCount = 0;
+
+	class NodeLoader{
+
+		constructor(url){
+			this.url = url;
+		}
+
+		async load(node){
+
+			if(node.loaded){
+				return;
+			}
+
+			let byteOffset = node.byteOffset;
+			let byteSize = node.byteSize;
+
+			let response = await fetch(this.url, {
+				headers: {
+					'content-type': 'multipart/byteranges',
+					'Range': `bytes=${byteOffset}-${byteOffset + byteSize}`,
+				},
+			});
+
+			let workerPath = Potree.scriptPath + '/workers/OctreeDecoderWorker.js';
+			let worker = Potree.workerPool.getWorker(workerPath);
+
+			worker.onmessage = function (e) {
+
+				let data = e.data;
+				let buffers = data.attributeBuffers;
+
+				Potree.workerPool.returnWorker(workerPath, worker);
+
+
+				let geometry = new THREE.BufferGeometry();
+				
+				for(let property in buffers){
+
+					let buffer = buffers[property].buffer;
+
+					if(property === "POSITION_CARTESIAN"){
+						geometry.addAttribute('position', new THREE.BufferAttribute(new Float32Array(buffer), 3));
+					}else if(property === "RGBA"){
+						geometry.addAttribute('color', new THREE.BufferAttribute(new Uint8Array(buffer), 4, true));
+					}
+
+				}
+				// indices ??
+
+				node.geometry = geometry;
+				node.loaded = true;
+				node.loading = false;
+				Potree.numNodesLoading--;
+			};
+
+			let buffer = await response.arrayBuffer();
+
+			let pointAttributes = node.octreeGeometry.pointAttributes;
+			let scale = node.octreeGeometry.scale;
+
+			let message = {
+				buffer: buffer,
+				pointAttributes: pointAttributes,
+				scale: scale,
+				min: node.boundingBox.min,
+			};
+
+			worker.postMessage(message, [message.buffer]);
+
+		}
+
+	}
+
+	function createChildAABB(aabb, index){
+		let min = aabb.min.clone();
+		let max = aabb.max.clone();
+		let size = new THREE.Vector3().subVectors(max, min);
+
+		if ((index & 0b0001) > 0) {
+			min.z += size.z / 2;
+		} else {
+			max.z -= size.z / 2;
+		}
+
+		if ((index & 0b0010) > 0) {
+			min.y += size.y / 2;
+		} else {
+			max.y -= size.y / 2;
+		}
+		
+		if ((index & 0b0100) > 0) {
+			min.x += size.x / 2;
+		} else {
+			max.x -= size.x / 2;
+		}
+
+		return new THREE.Box3(min, max);
+	}
+
+	class OctreeLoader_1_8{
+
+		static parseAttributes(aJson){
+
+			let attributes = new PointAttributes();
+
+			attributes.add(PointAttribute.POSITION_CARTESIAN);
+			attributes.add(new PointAttribute("RGBA", PointAttributeTypes.DATA_TYPE_UINT8, 4));
+
+			return attributes;
+		}
+
+		static async load(url){
+
+			let cloudJsPath = url;
+			let hierarchyPath = `${url}/../hierarchy.json`;
+			let dataPath = `${url}/../octree.data`;
+
+			let cloudJsResponse = fetch(cloudJsPath);
+			let hierarchyResponse = fetch(hierarchyPath);
+
+			let json = await (await cloudJsResponse).json();
+			let hierarchy = await (await hierarchyResponse).json();
+
+			let octree = new OctreeGeometry();
+			octree.url = url;
+			octree.spacing = json.spacing;
+			octree.scale = json.scale;
+
+			let min = new THREE.Vector3(...json.boundingBox.min);
+			let max = new THREE.Vector3(...json.boundingBox.max);
+			let boundingBox = new THREE.Box3(min, max);
+
+			let offset = min.clone();
+			boundingBox.min.sub(offset);
+			boundingBox.max.sub(offset);
+
+			octree.projection = json.projection;
+			octree.boundingBox = boundingBox;
+			octree.tightBoundingBox = boundingBox.clone();
+			octree.boundingSphere = boundingBox.getBoundingSphere(new THREE.Sphere());
+			octree.tightBoundingSphere = boundingBox.getBoundingSphere(new THREE.Sphere());
+			octree.offset = offset;
+			octree.pointAttributes = OctreeLoader_1_8.parseAttributes(json.attributes);
+			octree.loader = new NodeLoader(dataPath);
+
+			let root = new OctreeGeometryNode("r", octree, boundingBox);
+			root.level = 0;
+			root.hasChildren = false;
+			root.spacing = octree.spacing;
+			root.byteOffset = 0;
+			// root.byteSize = 1000 * 16;
+			// root.numPoints = 1000;
+
+			octree.root = root;
+
+
+			let traverse = (node, nodeJson) => {
+				node.numPoints = nodeJson.numPoints;
+
+				// node.spacing = node.spacing / 2;
+				node.byteOffset = nodeJson.byteOffset;
+				node.byteSize = nodeJson.byteSize;
+				node.numPoints = nodeJson.numPoints;
+
+				for(let childJson of nodeJson.children){
+					
+					let index = childJson.name.charAt(childJson.name.length - 1);
+
+					let childAABB = createChildAABB(node.boundingBox, index);
+					let child = new OctreeGeometryNode(childJson.name, octree, childAABB);
+					child.spacing = node.spacing / 2;
+					node.hasChildren = true;
+					
+					node.children[index] = child;
+					child.parent = node;
+
+					traverse(child, childJson);
+				}
+			};
+
+			traverse(root, hierarchy.hierarchy);
+
+
+			let result = {
+				geometry: octree,
+			};
+
+			return result;
+
+		}
+
+	};
 
 	class VRControlls{
 
@@ -29773,9 +30201,6 @@ ENDSEC
 
 	let resourcePath = exports.scriptPath + '/resources';
 
-	 src/potree;
-	src/potree/resources;
-
 
 	function loadPointCloud$1(path, name, callback){
 		let loaded = function(pointcloud){
@@ -29938,9 +30363,12 @@ ENDSEC
 	exports.Measure = Measure;
 	exports.MeasuringTool = MeasuringTool;
 	exports.Message = Message;
+	exports.NodeLoader = NodeLoader;
 	exports.NormalizationEDLMaterial = NormalizationEDLMaterial;
 	exports.NormalizationMaterial = NormalizationMaterial;
+	exports.OctreeLoader_1_8 = OctreeLoader_1_8;
 	exports.OrbitControls = OrbitControls;
+	exports.OrientedImage = OrientedImage$1;
 	exports.OrientedImageLoader = OrientedImageLoader;
 	exports.OrientedImages = OrientedImages;
 	exports.POCLoader = POCLoader;

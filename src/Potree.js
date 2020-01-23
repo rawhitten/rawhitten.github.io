@@ -1,4 +1,3 @@
-"use strict";
 
 export * from "./Actions.js";
 export * from "./AnimationPath.js";
@@ -14,7 +13,6 @@ export * from "./PointCloudOctree.js";
 export * from "./PointCloudOctreeGeometry.js";
 export * from "./PointCloudTree.js";
 export * from "./Points.js";
-export * from "./potree/potree.js";
 export * from "./Potree_update_visibility.js";
 export * from "./PotreeRenderer.js";
 export * from "./ProfileRequest.js";
@@ -66,6 +64,8 @@ export * from "./viewer/Scene.js";
 export * from "./modules/OrientedImages/OrientedImages.js";
 export * from "./modules/CameraAnimation/CameraAnimation.js";
 
+export * from "./modules/Loader_1.8/OctreeLoader_1_8.js";
+
 export {OrbitControls} from "./navigation/OrbitControls.js";
 export {FirstPersonControls} from "./navigation/FirstPersonControls.js";
 export {EarthControls} from "./navigation/EarthControls.js";
@@ -114,8 +114,8 @@ if (document.currentScript.src) {
 
 let resourcePath = scriptPath + '/resources';
 
-scriptPath: src/potree
-resourcePath:src/potree/resources
+// scriptPath: build/potree
+// resourcePath:build/potree/resources
 export {scriptPath, resourcePath};
 
 
