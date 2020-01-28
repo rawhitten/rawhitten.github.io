@@ -19,6 +19,11 @@ POINT CLOUD CLASSIFICATION CORRECTION
 		<script src="./build/potree.min.js"></script>
 		<script src="./build/potree.js"></script>
 		<script src="./build/potree.js"></script>
+		<script src="./WebVR.js"></script>
+		<script src='https://cdn.jsdelivr.net/npm/webvr-polyfill@latest/build/webvr-polyfill.js'></script>
+		<script type="text/javascript" src="./libs/VRController.js"></script>
+		<!-- <script type="text/javascript" src="js/statsvr.min.js"></script> -->
+		<script type="text/javascript" src="./libs/teleportvr.js"></script>
 		<script src="./src/loader/PointAttributes.js" type="module"></script>
 
 		<script src="./lib/threejs/VRButton.js" type="module"></script>
@@ -30,8 +35,10 @@ POINT CLOUD CLASSIFICATION CORRECTION
 			document.body.onload = function()
 			{
 				//three.js
+				//var polyfill = new WebVRPolyfill();
 				var scene = new THREE.Scene();
 				var camera = new THREE.PerspectiveCamera(100, 1, 0.1, );
+				var teleportVR = new TeleportVR(scene, camera);
 
 				var canvas = document.createElement("canvas");
 				canvas.style.position = "absolute";
@@ -51,12 +58,77 @@ POINT CLOUD CLASSIFICATION CORRECTION
 					premultipliedAlpha: true,
 					antialias: true,
 					preserveDrawingBuffer: false,
+					//xrenabled = true,
 					powerPreference: "high-performance"
 										
 				});
-				//renderer.xr.enabled = true;
 
+				//var frameData = new VRFrameData();
+	// var vrDisplay;
+
+	// navigator.getVRDisplays().then(function(displays) {
+	// vrDisplay = displays[0];
+	// console.log('Display found');
+	// // Starting the presentation when the button is clicked: It can only be called in response to a user gesture
+	// btn.addEventListener('click', function() {
+	// 	vrDisplay.requestPresent([{ source: canvas }]).then(function() {        
+	// 	drawVRScene();
+	// 	});
+	// });
+	// });
+
+	// // WebVR: Draw the scene for the WebVR display.
+	// function drawVRScene() {
+	// // WebVR: Request the next frame of the animation
+	// vrSceneFrame = vrDisplay.requestAnimationFrame(drawVRScene);
+
+	// // Populate frameData with the data of the next frame to display
+	// vrDisplay.getFrameData(frameData);
+
+	// // You can get the position, orientation, etc. of the display from the current frame's pose
+	// var curFramePose = frameData.pose;
+	// var curPos = curFramePose.position;
+	// var curOrient = curFramePose.orientation;
+
+	// // Clear the canvas before we start drawing on it.
+
+	// gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+	// // WebVR: Create the required projection and view matrix locations needed
+	// // for passing into the uniformMatrix4fv methods below
+
+	// var projectionMatrixLocation = gl.getUniformLocation(shaderProgram, "projMatrix");
+	// var viewMatrixLocation = gl.getUniformLocation(shaderProgram, "viewMatrix");
+
+	// // WebVR: Render the left eye’s view to the left half of the canvas
+	// gl.viewport(0, 0, canvas.width * 0.5, canvas.height);
+	// gl.uniformMatrix4fv(projectionMatrixLocation, false, frameData.leftProjectionMatrix);
+	// gl.uniformMatrix4fv(viewMatrixLocation, false, frameData.leftViewMatrix);
+	// drawGeometry();
+
+	// // WebVR: Render the right eye’s view to the right half of the canvas
+	// gl.viewport(canvas.width * 0.5, 0, canvas.width * 0.5, canvas.height);
+	// gl.uniformMatrix4fv(projectionMatrixLocation, false, frameData.rightProjectionMatrix);
+	// gl.uniformMatrix4fv(viewMatrixLocation, false, frameData.rightViewMatrix);
+	// drawGeometry();
+
+	// //   function drawGeometry() {
+	// //     // draw the view for each eye 
+	// //   }
+
+	// //     ...
+
+	// // WebVR: Indicate that we are ready to present the rendered frame to the VR display
+	// vrDisplay.submitFrame();
+	// }
+					
+
+
+
+
+				//renderer.xr.enabled = true;
 				document.body.appendChild( VRButton.createButton( renderer ) );
+				renderer.xr.enabled = true;
 
 				window.addEventListener( 'vrdisplaypresentchange', () =>  {
       				const device = that.renderer.vr.getDevice();
@@ -68,7 +140,9 @@ POINT CLOUD CLASSIFICATION CORRECTION
       				else {
         				console.log("ENTERED VR");
         				that.renderer.vr.enabled = true;
-        				that.controls.enabled = false;
+						that.controls.enabled = false;
+						// window.cancelAnimationFrame(normalSceneFrame);
+                		// drawVRScene();
 				    }
 				    
 				  } );
@@ -117,7 +191,7 @@ POINT CLOUD CLASSIFICATION CORRECTION
 						scene.add(sphere);
 						//arrow.setFromCamera(normalized, camera);
 						//scene.add(arrow);
-						var attr = PointAttribute.CLASSIFICATION(intersects[0].point);
+						var attr = PointAttributes.CLASSIFICATION(intersects[0].point);
 						console.log(attr);
 					}
 
@@ -174,12 +248,59 @@ POINT CLOUD CLASSIFICATION CORRECTION
 					});
 				}
 
+
+			//common VRController.js event code
+			window.addEventListener('vr controller connected', function (event) {
+            var controller = event.detail
+            //scene.add(controller);
+            teleportVR.add(controller);
+
+            controller.standingMatrix = renderer.vr.getStandingMatrix();
+            controller.head = window.camera;
+
+            var controllerMesh = new THREE.Object3D();
+            controllerMesh.add(new THREE.Mesh(
+                new THREE.CylinderGeometry(.05, 0.05, .4, 16, 1, true),
+                new THREE.MeshStandardMaterial({
+                    color: 0x00ff88,
+                    wireframe: true
+                })
+            ));
+
+            controllerMesh.rotation.x = -Math.PI / 2;
+            controller.userData.mesh = controllerMesh;
+            controller.add(controllerMesh);
+  
+            controller.addEventListener('thumbstick touch began', function (event) {
+                teleportVR.show(controller);
+            })
+            controller.addEventListener('thumbstick axes changed', function (event) {
+                if (Math.abs(event.axes[0]) > 0.01 && Math.abs(event.axes[1]) > 0.01) {
+                    var angleDeg = Math.atan2(-event.axes[0], -event.axes[1]);
+                    teleportVR.target.rotation.y = angleDeg;
+                }
+            })
+            controller.addEventListener('thumbstick touch ended', function (event) {
+                teleportVR.teleport();
+            })
+
+            controller.addEventListener('disconnected', function (event) {
+                controller.parent.remove(controller)
+            })
+        })
+
 				
 				renderer.setAnimationLoop( function () {
 
 					controls.update();
 
+					//vrSceneFrame = VRDisplay.requestAnimationFrame(scene);
+
 					renderer.render( scene, camera );
+					
+					THREE.VRController.update();
+
+            		teleportVR.update();
 
 				} );
 				// function loop()
@@ -190,7 +311,9 @@ POINT CLOUD CLASSIFICATION CORRECTION
 				// 	renderer.render(scene, camera);
 					
 
-				// 	requestAnimationFrame(loop);
+				// 	requestAnimationFrame(loop);{
+				// 		 vrSceneFrame = vrDisplay.requestAnimationFrame(drawVRScene)
+				// 	}
 				// };
 				// loop();
 
