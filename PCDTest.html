@@ -49,7 +49,7 @@
 				document.body.appendChild( renderer.domElement );
 
 				var loader = new PCDLoader();
-				loader.load( './data/output2.pcd', function ( points ) {
+				loader.load( './data/tree.pcd', function ( points ) {
 
 					scene.add( points );
 					var center = points.geometry.boundingSphere.center;
@@ -93,7 +93,7 @@
 
 			function keyboard( ev ) {
 
-				var points = scene.getObjectByName( 'output2.pcd' );
+				var points = scene.getObjectByName( 'tree.pcd' );
 
 				switch ( ev.key || String.fromCharCode( ev.keyCode || ev.charCode ) ) {
 
