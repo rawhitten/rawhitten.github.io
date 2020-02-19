@@ -49,7 +49,7 @@
 				document.body.appendChild( renderer.domElement );
 
 				var loader = new PCDLoader();
-				loader.load( 'E:/output2.pcd', function ( points ) {
+				loader.load( './data/output2.pcd', function ( points ) {
 
 					scene.add( points );
 					var center = points.geometry.boundingSphere.center;
