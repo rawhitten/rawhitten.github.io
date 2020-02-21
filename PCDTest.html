@@ -28,8 +28,22 @@
 
 			var container, stats;
 			var camera, controls, scene, renderer;
+			var pointclouds;
+			var intersection = null;
 
-			init();
+			var raycaster = new THREE.Raycaster();
+			var mouse = new THREE.Vector2();
+
+			function onMouseMove( event ) {
+
+				// calculate mouse position in normalized device coordinates
+				// (-1 to +1) for both components
+
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+				}
+			init(); 
 			animate();
 			function init() {
 
@@ -55,8 +69,10 @@
 					var center = points.geometry.boundingSphere.center;
 					controls.target.set( center.x, center.y, center.z );
 					controls.update();
+					pointclouds = [ points ];
 
 				} );
+
 
 				container = document.createElement( 'div' );
 				document.body.appendChild( container );
@@ -115,13 +131,20 @@
 				}
 
 			}
-
+			
 			function animate() {
 
 				requestAnimationFrame( animate );
 				controls.update();
 				renderer.render( scene, camera );
 				//stats.update();
+
+			}
+			function render() {
+				raycaster.setFromCamera( mouse, camera)
+				var intersections = raycaster.intersectObjects( pointclouds );
+				intersection = ( intersections.length ) > 0 ? intersections[ 0 ] : null;
+
 
 			}
 
