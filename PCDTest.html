@@ -30,19 +30,12 @@
 			var camera, controls, scene, renderer;
 			var pointclouds;
 			var intersection = null;
+			var spheres = [];
+			var spheresIndex = 0;
 
 			var raycaster = new THREE.Raycaster();
 			var mouse = new THREE.Vector2();
 
-			function onMouseMove( event ) {
-
-				// calculate mouse position in normalized device coordinates
-				// (-1 to +1) for both components
-
-				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
-				}
 			init(); 
 			animate();
 			function init() {
@@ -71,7 +64,25 @@
 					controls.update();
 					pointclouds = [ points ];
 
-				} );
+				
+										
+					var sphereGeometry = new THREE.SphereBufferGeometry( 0.005, 4, 45 );
+					var sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+
+						for ( var i = 0; i < 40; i ++ ) {
+
+							var sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+							scene.add( sphere );
+							spheres.push( sphere );
+
+					}
+
+
+				
+
+
+				}
+				);
 
 
 				container = document.createElement( 'div' );
@@ -97,6 +108,7 @@
 				window.addEventListener( 'keypress', keyboard );
 
 			}
+			
 
 			function onWindowResize() {
 
@@ -140,13 +152,44 @@
 				//stats.update();
 
 			}
-			function render() {
-				raycaster.setFromCamera( mouse, camera)
-				var intersections = raycaster.intersectObjects( pointclouds );
-				intersection = ( intersections.length ) > 0 ? intersections[ 0 ] : null;
 
+			var toggle = 0;
+
+			function render() {
+
+			// camera.applyMatrix4( rotateY );
+			// camera.updateMatrixWorld();
+
+			raycaster.setFromCamera( mouse, camera );
+
+			var intersections = raycaster.intersectObjects( pointclouds );
+			intersection = ( intersections.length ) > 0 ? intersections[ 0 ] : null;
+
+			if ( toggle > 0.02 && intersection !== null ) {
+
+				spheres[ spheresIndex ].position.copy( intersection.point );
+				spheres[ spheresIndex ].scale.set( 1, 1, 1 );
+				spheresIndex = ( spheresIndex + 1 ) % spheres.length;
+
+				toggle = 0;
 
 			}
+
+			for ( var i = 0; i < spheres.length; i ++ ) {
+
+				var sphere = spheres[ i ];
+				sphere.scale.multiplyScalar( 0.98 );
+				sphere.scale.clampScalar( 0.01, 1 );
+
+			}
+
+			toggle += clock.getDelta();
+
+			renderer.render( scene, camera );
+
+			}
+
+			
 
 		</script>
 	</body>
