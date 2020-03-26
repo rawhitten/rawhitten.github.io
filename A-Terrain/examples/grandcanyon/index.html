@@ -5,6 +5,30 @@
 <script src="../../dist/aframe-aterrain-component.js"></script>
 <script src="https://fernandojsg.github.io/aframe-camera-transform-controls-component/dist/aframe-camera-transform-controls-component.min.js"></script>
 
+<link rel="stylesheet" type="text/css" href="./build/potree/potree.css">
+<link rel="stylesheet" type="text/css" href="./libs/jquery-ui/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css" href="./libs/openlayers3/ol.css">
+<link rel="stylesheet" type="text/css" href="./libs/spectrum/spectrum.css">
+<link rel="stylesheet" type="text/css" href="./libs/jstree/themes/mixed/style.css">
+
+
+<script src="./libs/jquery/jquery-3.1.1.min.js"></script>
+<script src="./libs/spectrum/spectrum.js"></script>
+<script src="./libs/jquery-ui/jquery-ui.min.js"></script>
+<script src="./libs/three.js/build/three.min.js"></script>
+<script src="./libs/three.js/extra/lines.js"></script>
+<script src="./libs/other/BinaryHeap.js"></script>
+<script src="./libs/tween/tween.min.js"></script>
+<script src="./libs/d3/d3.js"></script>
+<script src="./libs/proj4/proj4.js"></script>
+<script src="./libs/openlayers3/ol.js"></script>
+<script src="./libs/i18next/i18next.js"></script>
+<script src="./libs/jstree/jstree.js"></script>
+<script src="./potree.js"></script>
+<script src="./libs/plasio/js/laslaz.js"></script>
+<script src="./libs/other/OBJLoader.js"></script>
+<script src="./libs/other/stats.js"></script>
+
 <style>
 body { background:#87CEEB; overflow:hidden;}
 </style>
@@ -33,7 +57,31 @@ body { background:#87CEEB; overflow:hidden;}
 <a-light type="ambient" color="#444444"></a-light>
 <a-light type="point" intensity="1" position="2 4 4"></a-light>
 
+
+
 </a-scene>
+<script>
+Potree.loadPointCloud("./code/pointclouds/VTdrone/cloud.js", "VTVR2", function(e){
+  let scene = viewer.scene;
+  let pointcloud = e.pointcloud;
+  
+  let material = pointcloud.material;
+  material.size = 0.27;
+  material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
+  material.shape = Potree.PointShape.SQUARE;
+  material.activeAttributeName = "RGBA";
+  material.rgbGamma = 0.6;
+  
+  scene.addPointCloud(pointcloud);
+  
+  scene.view.setView(
+            [551559.392, 4118439.524, 789.493],
+    [551486.958, 4118786.610, 542.311],
+  );
+});
+</script>
+
+
 
 <!-- GitHub Corner. -->
 <a href="https://github.com/anselm/aterrain" class="github-corner">
