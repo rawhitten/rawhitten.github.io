@@ -4,7 +4,7 @@
 	<link rel="stylesheet" href="resize.css">
 </head>
 <body>
-<div style="background-color: #23426">
+<div style="background-color:#23611d">
 		<script src="./lib/threejs/three.min.js"></script>
 		<script src="./lib/threejs/three.js"></script>
 		<script src="./lib/threejs/OrbitControls.js"></script>
@@ -22,6 +22,7 @@
 
 			//need to link to correct library paths
 			import { VRButton } from './lib/threejs/VRButton.js' ;
+			import {PointAttribute} from './src/loader/PointAttributes.js';
 
 			document.body.onload = function()
 			{
@@ -183,13 +184,13 @@
 					if(intersects.length > 0)
 					{
 						var geometry = new THREE.SphereBufferGeometry(0.1, 32, 32);
-						var material = new THREE.MeshBasicMaterial({color: 0xAA4444});
+						var material = new THREE.MeshBasicMaterial({color: 0xAA44AA});
 						var sphere = new THREE.Mesh(geometry, material);
 						sphere.position.copy(intersects[0].point);
 						scene.add(sphere);
 						//arrow.setFromCamera(normalized, camera);
 						//scene.add(arrow);
-						var attr = PointAttributes.CLASSIFICATION(intersects[0].point);
+						var attr = PointAttribute.CLASSIFICATION(intersects[0].point);
 						console.log(attr);
 					}
 
