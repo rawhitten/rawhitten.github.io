@@ -1,0 +1,33 @@
+* {
+    box-sizing: border-box;
+   
+  }
+
+body{
+    font-family:sans-serif;
+    background-color:lightgrey;
+}
+
+.card{
+    margin: 0 auto;
+}
+
+.scattergrid{
+    display:grid;
+    gap:0rem;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    background-color:white;
+    padding:1rem;
+    border-radius:1em;
+
+}
+
+.scatter {
+    width:100%;
+    aspect-ratio:12/9;
+}
+
+.web {
+    margin: 0 auto;
+    aspect-ratio: 1.01;
+}
